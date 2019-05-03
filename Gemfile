@@ -3,7 +3,6 @@ ruby "2.6.3"
 
 gem 'http'
 gem 'json'
-gem 'faye-websocket'
-gem 'eventmachine'
-
+gem 'slack-ruby-client'
+gem 'async-websocket'
 
