@@ -1,10 +1,6 @@
 require 'slack-ruby-client'
 require './gourmet'
-
-def search(keyword)
-  gourmet = Gourumet.new
-  gourmet.search(keyword)
-end
+require './message_analyzer'
 
 Slack.configure do |config|
   config.token = ENV['SLACK_API_TOKEN']
@@ -25,15 +21,17 @@ client.on :message do |data|
   client.typing channel: data.channel
 
   pattern = /^ご飯[[:space:]|\s]*/
-
+  analyzer = MessageAnalyzer.new(pattern)
   p pattern === data.text
-  if pattern === data.text
-    keyword = pattern.match(data.text).post_match
+
+  if analyzer.match? data.text
+    keyword = analyzer.get_keyword(data.text)
     puts "keyword: #{keyword}"
     if keyword.empty?
       client.message(channel: data.channel, text: 'お腹すいた？')
     else
-      shop_list = search(keyword)
+      gourmet_search = Gourmet.new
+      shop_list = gourmet_search.search(keyword)
       shop_list.each do |shop|
         text = "#{shop.name}\n#{shop.address}\n#{shop.url}"
         client.message(channel: data.channel, text: text)
@@ -42,17 +40,6 @@ client.on :message do |data|
   else
     puts 'not match.'
   end
-
-=begin
-  case data.text
-  when 'ご飯' then
-    results = search
-    
-    results.each do |result|
-      client.message(channel: data.channel, text: result.name)
-    end
-  end
-=end
 
 end
 

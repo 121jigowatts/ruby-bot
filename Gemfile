@@ -6,3 +6,6 @@ gem 'json'
 gem 'slack-ruby-client'
 gem 'async-websocket'
 
+gem 'test-unit'
+
+

@@ -1,10 +1,9 @@
 require 'http'
 require 'json'
 
-class Gourumet
-  Shop = Struct.new(:name, :address, :url)
+class Gourmet
   def initialize
-
+    @shop = Struct.new(:name, :address, :url)
   end
 
   def search(keyword)
@@ -25,12 +24,11 @@ class Gourumet
 
     shop_list = []
     data.results.shop.each do |a_shop|
-      shop_list << Shop.new(a_shop.name, a_shop.address, a_shop.urls.pc)
+      shop_list << @shop.new(a_shop.name, a_shop.address, a_shop.urls.pc)
     end
 
     shop_list
   end
-
 end
 
 
